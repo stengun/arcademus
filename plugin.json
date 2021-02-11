@@ -1,0 +1,10 @@
+{
+  "plugin": {
+    "name": "arcademus",
+    "description": "Game music player",
+    "version": "0.0.2",
+    "author": "Roberto Benfatto",
+    "type": "plugin",
+    "start": "false"
+  }
+}

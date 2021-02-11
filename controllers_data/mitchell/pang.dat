@@ -1,0 +1,42 @@
+Track{ "Mt Fuji", 40 }
+Track{ "Mt Keirin", 41 }
+Track{ "Emerald Temple", 42 }
+Track{ "Angkor Wat", 43 }
+Track{ "Australia", 44 }
+Track{ "India", 45 }
+Track{ "Leningrad", 46 }
+Track{ "Paris", 47 }
+Track{ "London", 48 }
+Track{ "Barcelona", 49 }
+Track{ "The End", 39 }
+Track{ "Getting Late", 32 }
+Track{ "Out of Time!", 33 }
+Track{ "Continue?", 35 }
+Track{ "Game Over", 36 }
+Track{ "High Score", 37 }
+Track{ "Level Complete", 38 }
+Track{ "Coin", 0 }
+Track{ "Stage Timer", 1 }
+Track{ "Extra Life", 9 }
+Track{ "Life Lost", 14 }
+Track{ "Effect 1", 2 }
+Track{ "Effect 2", 3 }
+Track{ "Effect 3", 4 }
+Track{ "Effect 4", 6 }
+Track{ "Effect 5", 7 }
+Track{ "Effect 6", 8 }
+Track{ "Effect 7", 10 }
+Track{ "Effect 8", 11 }
+Track{ "Effect 9", 12 }
+Track{ "Effect 10", 13 }
+Track{ "Effect 11", 15 }
+Track{ "Effect 12", 17 }
+Track{ "Effect 13", 18 }
+Track{ "Effect 14", 19 }
+Track{ "Effect 15", 20 }
+Track{ "Effect 16", 21 }
+Track{ "Pop!", 129 }
+Track{ "Airplane", 130 }
+Track{ "Car Engine", 131 }
+Track{ "Unused track #1", 34 }
+Track{ "Unused track #2", 50 }

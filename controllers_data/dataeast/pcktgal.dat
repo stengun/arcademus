@@ -1,0 +1,57 @@
+Track{ "Starting Stage 1", 37 }
+Track{ "Stage 1", 33 }
+Track{ "Ending Stage 1", 41 }
+Track{ "Starting Stage 2", 38 }
+Track{ "Stage 2", 34 }
+Track{ "Ending Stage 2", 42 }
+Track{ "Starting Stage 3", 39 }
+Track{ "Stage 3", 35 }
+Track{ "Ending Stage 3", 43 }
+Track{ "Starting Stage 4", 40 }
+Track{ "Stage 4", 36 }
+Track{ "Ending Stage 4", 44 }
+
+Track{ "Bonus Stage", 45 }
+Track{ "Helping Hand", 46 }
+
+Track{ "Counting points", 47 }
+Track{ "Game Over", 48 }
+Track{ "End Credits", 49 }
+
+Track{ "Coin 2", 4 }
+Track{ "Player Start", 22 }
+Track{ "Getting Late", 26 }
+
+Track{ "Voice 1", 51 }
+Track{ "Voice 2", 52 }
+Track{ "Voice 3", 53 }
+Track{ "Voice 4", 54 }
+Track{ "Voice 5", 56 }
+Track{ "Voice 6 - In Hole", 57 }
+Track{ "Voice 7", 58 }
+Track{ "Voice 8 - Coin 1", 59 }
+Track{ "Audio Test", 60 }
+
+Track{ "Effect 1", 5 }
+Track{ "Effect 2", 6 }
+Track{ "Effect 3", 7 }
+Track{ "Effect 4", 8 }
+Track{ "Effect 5", 9 }
+Track{ "Effect 6", 10 }
+Track{ "Effect 7", 11 }
+Track{ "Effect 8", 12 }
+Track{ "Effect 9", 13 }
+Track{ "Effect 10", 14 }
+Track{ "Effect 11", 15 }
+Track{ "Effect 12", 16 }
+Track{ "Effect 13", 17 }
+Track{ "Effect 14", 18 }
+Track{ "Effect 15", 19 }
+Track{ "Effect 16", 20 }
+Track{ "Effect 17", 21 }
+Track{ "Effect 18", 23 }
+Track{ "Effect 19", 24 }
+Track{ "Effect 20", 25 }
+Track{ "Effect 21", 27 }
+Track{ "Effect 22", 29 }
+Track{ "Effect 23", 55 }

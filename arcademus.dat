@@ -1,0 +1,39 @@
+;Format @:cputag,memory,controller,startindex,stoptrack,mintrack,maxtrack
+; data east games
+pcktgal:
+pcktgalb:
+pcktgal2:
+pcktgal2j:
+spool3:
+sidepckt:
+sidepcktj:
+sidepcktb:
+karnov:
+karnova:
+karnovj:
+karnovjbl:
+robocop:
+@dataeast
+
+; mitchell games
+pang:
+pangb:
+pangbold:
+pangba:
+pangbb:
+pangb2:
+pangbp:
+pangbc:
+bbros:
+hatena:
+block:
+marukin:
+mgakuen:
+mgakuen2:
+pkladies:
+cworld:
+spang:
+qtono1:
+qsangoku:
+dokaben:
+@mitchell
