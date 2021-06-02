@@ -1,0 +1,27 @@
+Track{ "Intro", 10 }
+Track{ "Round Start 1", 11 }
+Track{ "Round Start 2", 29 }
+Track{ "DOH Round", 12 }
+Track{ "Game Over", 14 }
+Track{ "Highscore", 15 }
+Track{ "Unused Track", 23 }
+Track{ "Coin 1", 05 }
+Track{ "Coin 2", 08 }
+Track{ "Laser 1", 06 }
+Track{ "Laser 2", 17 }
+Track{ "Ball Bounce 1", 03 }
+Track{ "Ball Bounce 2", 04 }
+Track{ "Ball Bounce 3", 18 }
+Track{ "Ball Bounce 4", 22 }
+Track{ "Ball Bounce 5", 25 }
+Track{ "Effect 1", 07 }
+Track{ "Effect 2", 09 }
+Track{ "Effect 3", 13 }
+Track{ "Effect 4", 16 }
+Track{ "Effect 5", 19 }
+Track{ "Effect 6", 20 }
+Track{ "Effect 7", 21 }
+Track{ "Effect 8", 24 }
+Track{ "Effect 9", 26 }
+Track{ "Effect 10", 27 }
+Track{ "Effect 11", 28 }
