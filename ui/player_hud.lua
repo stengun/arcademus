@@ -87,8 +87,8 @@ local function draw_tracklist()
             if idx - listmin + 1 > 1 then
             end
 
-            local entry_string = "%2.2d - %s %s"
-            local symbol = ""
+            local entry_string = "%2.2d %s %s"
+            local symbol = "-"
             local text_color
             if idx == current_track then
                 if recording then
@@ -145,7 +145,7 @@ function hud:init(controller)
 
     raw_mode = not self.controller.tracklist or #self.controller.tracklist == 0
     screen = manager.machine.screens[":screen"]
-
+    screen.container.orientation = 0x8
     -- Register callbacks for UI input
     keyboard_events.register_key_event_callback(
             "KEYCODE_UP", -- scroll list up / sub 16 to raw alue
@@ -158,7 +158,7 @@ function hud:init(controller)
                             listmax = listmax - 1
                         end
                     else
-                        raw_value = math.max(0, raw_value - 16)
+                        raw_value = math.max(0, raw_value - 16) & 0xFF
                     end
                 end end)
     keyboard_events.register_key_event_callback(
@@ -172,20 +172,20 @@ function hud:init(controller)
                             listmax = listmax + 1
                         end
                     else
-                        raw_value = math.min(0xFF, raw_value + 16)
+                        raw_value = math.min(0xFF, raw_value + 16) & 0xFF
                     end
                 end end)
     keyboard_events.register_key_event_callback(
             "KEYCODE_LEFT", -- sub 1 to raw value
             function(event)
                 if event == "pressed" then
-                    raw_value = math.max(0, raw_value - 1)
+                    raw_value = math.max(0, raw_value - 1) & 0xFF
                 end end)
     keyboard_events.register_key_event_callback(
             "KEYCODE_RIGHT", -- add 1 to raw value
             function(event)
                 if event == "pressed" then
-                    raw_value = math.min(0xFF, raw_value + 1)
+                    raw_value = math.min(0xFF, raw_value + 1) & 0xFF
                 end end)
     keyboard_events.register_key_event_callback(
             "KEYCODE_ENTER", -- Play current track
@@ -234,6 +234,7 @@ function hud:draw_frame()
         draw_tracklist()
     end
     draw_info()
+    self.controller:tick()
 end
 
 return hud

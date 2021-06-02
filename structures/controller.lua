@@ -23,6 +23,7 @@ controller.prototype = {
     init = function(self)  end,
     stop_raw = function(self) end,
     play_raw = function(self, raw_index)  end,
+    tick_impl = function(self) end,
     --- normal methods
     stop = function(self)
         if manager.machine.sound.recording then
@@ -56,6 +57,9 @@ controller.prototype = {
             return #self.tracklist
         end
         return 256
+    end,
+    tick = function(self)
+        self:tick_impl()
     end
 }
 
