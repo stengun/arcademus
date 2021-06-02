@@ -1,0 +1,46 @@
+Track{ "The journey begins", 07 }
+Track{ "High Score", 08 }
+Track{ "Boss fight", 09 }
+Track{ "Death comes! (Music restarts slow)", 25 }
+Track{ "Death comes! (Music restarts fast)", 42 }
+Track{ "Hurry up!", 24 }
+Track{ "Main theme", 48 }
+Track{ "Main theme (fast)", 15 }
+Track{ "Extend 1", 10 }
+Track{ "Extend completed", 16 }
+Track{ "Extend completed", 50 }
+Track{ "Game Over", 11 }
+
+Track{ "Secret 1", 41 }
+Track{ "Secret 2", 43 }
+
+Track{ "Effect 1", 12 }
+Track{ "Effect 2", 13 }
+Track{ "Effect 3", 14 }
+Track{ "Effect 4", 17 }
+Track{ "Effect 5", 18 }
+Track{ "Effect 6", 19 }
+Track{ "Effect 7", 20 }
+Track{ "Effect 8", 21 }
+Track{ "Effect 9", 22 }
+Track{ "Effect 10", 23 }
+Track{ "Effect 11", 26 }
+Track{ "Effect 12", 27 }
+Track{ "Effect 13", 28 }
+Track{ "Effect 14", 29 }
+Track{ "Effect 15", 30 }
+Track{ "Effect 16", 32 }
+Track{ "Effect 17", 33 }
+Track{ "Effect 18", 34 }
+Track{ "Effect 19", 35 }
+Track{ "Effect 20", 36 }
+Track{ "Effect 21", 37 }
+Track{ "Effect 22", 38 }
+Track{ "Effect 23", 39 }
+Track{ "Effect 24", 40 }
+Track{ "Effect 25", 44 }
+Track{ "Effect 26", 45 }
+Track{ "Effect 27", 47 }
+Track{ "Effect 28", 49 }
+Track{ "Effect 29", 51 }
+Track{ "Effect 30", 52 }

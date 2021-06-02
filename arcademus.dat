@@ -39,6 +39,11 @@ qsangoku:
 dokaben:
 @mitchell
 
+; taito games
+bublbobl:
+tokio:
+@taito
+
 ; arkanoid
 arkanoid:
 @arkanoid

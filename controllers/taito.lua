@@ -1,0 +1,47 @@
+local taito = {}
+
+--- Taito games have a watchdog, this watchdog needs to be refreshed to avoid a complete machine reset.
+--- The base address used to inject the "loop" code is chosen by detecting when the machine has ended its
+--- initialization, so we have all the cpus ready to be used.
+--- This code is not injected into ram because we need to initialize the entire machine before
+--- we stuck the main cpu, so the best way to do it is modifying the main program rom region.
+--- ===== injected code
+--- ld ($watchdog_addr), a    ; we reset the watchdog
+--- jr $-4                    ; jump to watchdog reset (4 bits back)
+
+local games = {}
+-- format:  base_address  watchdog_address  main_to_sound_address  tracklist_file(optional)
+games.bublbobl = { 0x01AA, 0xFA80, 0xFA00, "taito/bublbobl.dat"}
+games.tokio    = { 0x003E, 0xFA00, 0xFC00}
+
+local tracklist = require("arcademus/structures/tracklist")
+local maincpu
+local memory
+
+local function inject()
+    local base_addr = games[manager.machine.system.name][1]
+    local watchdog_addr = games[manager.machine.system.name][2]
+    manager.machine.memory.regions[":maincpu"]:write_i8(base_addr, 0x32) -- LD (nn) a
+    manager.machine.memory.regions[":maincpu"]:write_i8(base_addr + 0x0001,  watchdog_addr & 0xFF)
+    manager.machine.memory.regions[":maincpu"]:write_i8(base_addr + 0x0002, (watchdog_addr >> 8) & 0xFF)
+    manager.machine.memory.regions[":maincpu"]:write_i8(base_addr + 0x0003, 0x18) -- JR -4
+    manager.machine.memory.regions[":maincpu"]:write_i8(base_addr + 0x0004, 0xFB)
+end
+
+--- ===================================
+function taito:play_raw(num)
+    memory:write_i8(games[manager.machine.system.name][3], num)
+end
+
+function taito:stop_raw()
+    memory:write_i8(games[manager.machine.system.name][3], 00)
+end
+
+function taito:init()
+    maincpu = manager.machine.devices[":maincpu"]
+    memory = maincpu.spaces["program"]
+    inject()
+    self.tracklist = tracklist.new(games[manager.machine.system.name][4])
+end
+
+return taito
