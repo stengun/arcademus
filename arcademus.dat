@@ -39,7 +39,7 @@ qsangoku:
 dokaben:
 @mitchell
 
-; taito games
+; taito games =====
 bublbobl:
 tokio:
 @taito
@@ -47,3 +47,20 @@ tokio:
 ; arkanoid
 arkanoid:
 @arkanoid
+
+rastan:
+rastanu:
+rastanua:
+rastanub:
+rastana:
+rastanb:
+rastsaga:
+rastsagaa:
+rastsagab:
+jumping:
+jumpinga:
+jumpingi:
+rbisland:
+rbislando:
+rbislande:
+@rastan
