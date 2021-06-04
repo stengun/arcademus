@@ -31,7 +31,7 @@ local function inject()
             progrom:write_i16(base_address + offset, v)
         end
     else
-        progrom:write_i16(base_entrypoint, 0x60FE) --- bra #$0
+        progrom:write_i16(base_address, 0x60FE) --- bra #$0
     end
 end
 
