@@ -32,9 +32,12 @@ function arcademus.startplugin()
     local dat_filename = "arcademus.dat"
 
     local function machine_start()
-        local running_system = manager.machine.system.name
-        if running_system == "___empty" then
+        if manager.machine.system.name == "___empty" then
             return
+        end
+        local ancestor_system = manager.machine.system
+        while ancestor_system.parent ~= "0" do
+            ancestor_system = emu.driver_find(ancestor_system.parent)
         end
         -- parsing kinda borrowed from hiscore plugin. Thanks
         local file = io.open( manager.plugins[arcademus.name].directory .. "/" .. dat_filename, "r" );
@@ -50,7 +53,7 @@ function arcademus.startplugin()
                         local modulename = string.match(line, '^@([^,]+)')
                         controller = require("arcademus/structures/controller").new(modulename)
                         break;
-                    elseif string.match(line, running_system .. ':') then --- match this game
+                    elseif string.match(line, ancestor_system.name .. ':') then --- match this game
                         current_is_match = true;
                     end
                 end

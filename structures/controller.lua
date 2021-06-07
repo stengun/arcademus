@@ -19,6 +19,8 @@ controller.prototype = {
     current_track = 1,
     playing = false,
     tracklist = tracklist.new({}),
+    running_system_name = "0",
+    parent_system_name = "0",
     --- "virtual" methods to override.
     init = function(self)  end,
     stop_raw = function(self) end,
@@ -71,6 +73,12 @@ controller.mt = {
 function controller.new(s)
     if type(s) == "string" then
         tb = require("arcademus/controllers/" .. s)
+        local ancestor_system = manager.machine.system
+        while ancestor_system.parent ~= "0" do
+            ancestor_system = emu.driver_find(ancestor_system.parent)
+        end
+        tb.running_system_name = manager.machine.system.name
+        tb.parent_system_name = ancestor_system.name
         tb:init()
         setmetatable(tb, controller.mt)
         tb:stop()

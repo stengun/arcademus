@@ -17,10 +17,11 @@ games.tokio    = { 0x003E, 0xFA00, 0xFC00}
 local tracklist = require("arcademus/structures/tracklist")
 local maincpu
 local memory
+local game
 
 local function inject()
-    local base_addr = games[manager.machine.system.name][1]
-    local watchdog_addr = games[manager.machine.system.name][2]
+    local base_addr = game[1]
+    local watchdog_addr = game[2]
     manager.machine.memory.regions[":maincpu"]:write_i8(base_addr, 0x32) -- LD (nn) a
     manager.machine.memory.regions[":maincpu"]:write_i8(base_addr + 0x0001,  watchdog_addr & 0xFF)
     manager.machine.memory.regions[":maincpu"]:write_i8(base_addr + 0x0002, (watchdog_addr >> 8) & 0xFF)
@@ -30,18 +31,22 @@ end
 
 --- ===================================
 function taito:play_raw(num)
-    memory:write_i8(games[manager.machine.system.name][3], num)
+    memory:write_i8(game[3], num)
 end
 
 function taito:stop_raw()
-    memory:write_i8(games[manager.machine.system.name][3], 00)
+    memory:write_i8(game[3], 00)
 end
 
 function taito:init()
+    game = games[self.running_system_name]
+    if game == nil then
+        game = games[self.parent_system_name]
+    end
     maincpu = manager.machine.devices[":maincpu"]
     memory = maincpu.spaces["program"]
     inject()
-    self.tracklist = tracklist.new(games[manager.machine.system.name][4])
+    self.tracklist = tracklist.new(game[4])
 end
 
 return taito

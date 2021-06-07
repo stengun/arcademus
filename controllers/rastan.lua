@@ -48,29 +48,21 @@ local jumping_injected_opcodes = {
 local games = {}
 
 games.rbisland = { 0x3E0001, 0x3E0003, 0x10D13C }
-games.rbislando = games.rbisland
 games.rbislande = { 0x3E0001, 0x3E0003, 0x10D13C }
 games.rastan = { 0x3E0001, 0x3E0003, 0x10D13C }
-games.rastanu = games.rastan
-games.rastanua = games.rastan
-games.rastanub = games.rastan
-games.rastana = games.rastan
-games.rastanb = games.rastan
-games.rastsaga = games.rastan
-games.rastsagaa = games.rastan
-games.rastsagab = games.rastan
 games.jumping = { 0x10C000, 0x400007, 0x10D13C, jumping_injected_opcodes }
 games.jumpinga = games.jumping
 games.jumpingi = games.jumping
 
 local maincpu
 local memory
+local game
 
 local function inject()
-    local master_address = games[manager.machine.system.name][1]
-    local comm_address = games[manager.machine.system.name][2]
-    local ram_address = games[manager.machine.system.name][3]
-    local opcodes = games[manager.machine.system.name][4]
+    local master_address = game[1]
+    local comm_address = game[2]
+    local ram_address = game[3]
+    local opcodes = game[4]
     if opcodes == nil then
         opcodes = injected_opcodes
     end
@@ -98,14 +90,18 @@ end
 
 --- ===============================
 function rastan:play_raw(num)
-    memory:write_i16(games[manager.machine.system.name][3], (num << 8) & 0xFF00)
+    memory:write_i16(game[3], (num << 8) & 0xFF00)
 end
 
 function rastan:stop_raw()
-    memory:write_i16(games[manager.machine.system.name][3], 0x0001)
+    memory:write_i16(game[3], 0x0001)
 end
 
 function rastan:init()
+    game = games[self.running_system_name]
+    if game == nil then
+        game = games[self.parent_system_name]
+    end
     maincpu = manager.machine.devices[":maincpu"]
     memory = maincpu.spaces["program"]
     inject()

@@ -22,14 +22,6 @@ local games = {}
 -- note: this format can be simplified to omit the first two params, mgakuen is the only reason they were added.
 --- format: memory_space, offset, opll_init, opll_play, sp, stop_track, tracklist
 games.pang      = { "opcodes", 0xF000, 0x7803, 0x7800, 0x0000, 63, "mitchell/pang.dat" }
-games.pangb     = games.pang
-games.pangbold  = games.pang
-games.pangba    = games.pang
-games.pangb2    = games.pang
-games.pangbb    = games.pang
-games.pangbp    = games.pang
-games.pangbc    = games.pang
-games.bbros     = games.pang
 games.spang     = { "opcodes", 0xF000, 0x7803, 0x7800, 0x0000, 64  }
 
 games.mgakuen   = { "program", 0xEFE0, 0x7803, 0x7800, 0xEE40, 41   } -- this does not work properly
@@ -51,9 +43,9 @@ local memory
 local cpu
 local io
 local program_counter_base
+local game
 
 local function inject()
-    local game = games[manager.machine.system.name]
     -- inject custom opcodes in a safe location inside ram.
     for _, val in pairs(injected_opcodes) do
         memory:write_i8((_ - 1) + program_counter_base, val)
@@ -84,13 +76,15 @@ function mitchell:play_raw(num)
 end
 
 function mitchell:stop_raw()
-    local game = games[manager.machine.system.name]
     self:play_raw(game[6])
     self:play_raw(0x80)
 end
 
 function mitchell:init()
-    local game = games[manager.machine.system.name]
+    game = games[self.running_system_name]
+    if game == nil then
+        game = games[self.parent_system_name]
+    end
     cpu = manager.machine.devices[":maincpu"]
     memory = cpu.spaces[game[1]]
     io = cpu.spaces["io"]

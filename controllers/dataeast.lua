@@ -4,6 +4,7 @@ local tracklist = require("arcademus/structures/tracklist")
 local cpu
 local memory
 local cpu_space
+local game
 
 local function mos6502_hang()
     --- Startup sequence responds to RESET instruction which will load
@@ -35,20 +36,16 @@ end
 local games = {}
 -- format: cpu_tag, cpu_space, hang_function, sound_w_address, stop_track_index, (opt) tracklist_file
 games.pcktgal = { ":maincpu", "program", mos6502_hang, 0x1A00, 50, "dataeast/pcktgal.dat" }
-games.pcktgal2 = pcktgal
-games.spool3 = pctkgal
 games.sidepckt = { ":maincpu", "program", mc6809E_hang, 0x3004, 29, }
-games.sidepcktj = games.sidepckt
-games.sidepcktb = games.sidepckt
 games.karnov = { ":maincpu", "program", mc68000_hang, 0xc0003, 28, }
-games.karnova = games.karnov
-games.karnovj = games.karnov
-games.karnovjbl = games.karnov
 games.robocop = { ":maincpu", "program", mc68000_hang, 0x30c015, 0, }
 
 --- ================ Controller interface
 function dataeast:init()
-    local game = games[manager.machine.system.name]
+    game = games[self.running_system_name]
+    if game == nil then
+        game = games[self.parent_system_name]
+    end
     cpu = manager.machine.devices[game[1]]
     memory = manager.machine.memory.regions[game[1]]
     cpu_space = cpu.spaces[game[2]]
@@ -57,12 +54,10 @@ function dataeast:init()
 end
 
 function dataeast:play_raw(num)
-    local game = games[manager.machine.system.name]
     cpu_space:write_i8(game[4], num & 0x7F)
 end
 
 function dataeast:stop_raw()
-    local game = games[manager.machine.system.name]
     self:play_raw(game[5])
 end
 
