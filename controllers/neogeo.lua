@@ -207,7 +207,7 @@ function neogeo:init()
     cmdqueue = require("arcademus/structures/cmdqueue").new(cmdqueue)
     local game = games[manager.machine.system.name]
     if game ~= nil then
-        rawset(cmdqueue, "prefix", game)
+        cmdqueue.prefix = game
     end
     manager.machine:popmessage("Machine is Initializing...")
 end

@@ -1,30 +1,37 @@
 local cmdqueue = {}
 
+local function concat_tables(t1, t2)
+    for i = 1, #t2 do
+        t1[#t1 + 1] = t2[i]
+    end
+    return t1
+end
+
 cmdqueue.prototype = {
+    postfix = {},
     prefix = {},
     command = {},
     index = 1,
     prefixed = true,
+    postfixed = true,
     ended = true,
-
+    _internal_seq = nil,
     get_next = function (self)
-        if self.prefixed then
-            local retval = self.prefix[self.index]
-            rawset(self, "index", self.index + 1)
-            if retval then
-                return retval
+        if self._internal_seq == nil then
+            rawset(self, "_internal_seq", {})
+            if self.prefixed then
+                concat_tables(self._internal_seq, self.prefix)
             end
-            retval = self.command[self.index - #self.prefix - 1]
-            if not retval then
-                rawset(self, "ended", true)
+            concat_tables(self._internal_seq, self.command)
+            if self.postfixed then
+                concat_tables(self._internal_seq, self.postfix)
             end
-            return retval
         end
-        
-        local retval = self.command[self.index]
-        rawset(self, "index", self.index + 1)
+        local retval = self._internal_seq[self.index]
         if not retval then
             rawset(self, "ended", true)
+        else
+            rawset(self, "index", self.index + 1)
         end
         return retval
     end,
@@ -33,9 +40,11 @@ cmdqueue.prototype = {
         table.insert(self.command, cmd)
     end,
     
-    reset_queue = function (self, is_prefixed)
+    reset_queue = function (self, is_prefixed, is_postfixed)
+        rawset(self, "_internal_seq", nil)
         rawset(self, "command", {})
         rawset(self, "prefixed", is_prefixed == nil or is_prefixed)
+        rawset(self, "postfixed", is_postfixed == nil or is_postfixed)
         rawset(self, "index", 1)
         rawset(self, "ended", false)
     end
@@ -43,7 +52,11 @@ cmdqueue.prototype = {
 
 cmdqueue.mt = {
     __index = cmdqueue.prototype,
-    __newindex = function (t, k, v) end
+    __newindex = function (t, k, v) 
+        if k == "prefix" or k == "postfix" then
+            return rawset(t, k, v)
+        end
+    end
 }
 
 function cmdqueue.new(o)
