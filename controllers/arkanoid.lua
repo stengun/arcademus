@@ -44,7 +44,6 @@ function arkanoid:init()
     cpu = manager.machine.devices[":maincpu"]
     memory = cpu.spaces["program"]
     inject()
-    self.tracklist = tracklist.new("taito/arkanoid.dat")
     cpu.state["PC"].value = base_ram_address
 end
 

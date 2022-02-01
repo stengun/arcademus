@@ -1,11 +1,17 @@
 ;Format @:cputag,memory,controller,startindex,stoptrack,mintrack,maxtrack
 
-; data east games
-pcktgal:
-sidepckt:
-karnov:
-robocop:
-@dataeast
+; games that use a simple soundlatch mechanism
+; 1942:
+; 1943:
+; 1943kai:
+; pcktgal:
+; sidepckt:
+; karnov:
+; robocop:
+; commando:
+; congo:
+; ixion:
+; @latched
 
 ; mitchell games
 pang:
@@ -25,7 +31,7 @@ dokaben:
 ; taito games =====
 bublbobl:
 tokio:
-@taito
+@latched
 
 ; arkanoid
 arkanoid:

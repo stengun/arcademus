@@ -36,7 +36,11 @@ function tracklist.new(name)
         function Track(o)
             table.insert(tlist, track.new({name = o[1], value = o[2]}))
         end
-        dofile("plugins/arcademus/controllers_data/" .. name)
+        local file = loadfile(manager.plugins["arcademus"].directory .. "/tracklist/" .. name .. ".dat")
+        if file ~= nil then
+            print("Tracklist loaded")
+            file()
+        end
         setmetatable(tlist, tracklist.mt)
         return tlist
     elseif name and type(name) == "table" then

@@ -144,8 +144,8 @@ function hud:init(controller)
     self.controller = controller
 
     raw_mode = not self.controller.tracklist or #self.controller.tracklist == 0
-    screen = manager.machine.screens[":screen"]
-    screen.container.orientation = 0x8
+    screen = manager.machine.screens[controller.screen_path]
+    screen.container.orientation = 0x08
     -- Register callbacks for UI input
     keyboard_events.register_key_event_callback(
             "KEYCODE_UP", -- scroll list up / sub 16 to raw alue
@@ -234,7 +234,6 @@ function hud:draw_frame()
         draw_tracklist()
     end
     draw_info()
-    self.controller:tick()
 end
 
 return hud

@@ -17,6 +17,9 @@ cmdqueue.prototype = {
     ended = true,
     _internal_seq = nil,
     get_next = function (self)
+        if self.ended then
+            return nil
+        end
         if self._internal_seq == nil then
             rawset(self, "_internal_seq", {})
             if self.prefixed then
@@ -28,10 +31,9 @@ cmdqueue.prototype = {
             end
         end
         local retval = self._internal_seq[self.index]
+        rawset(self, "index", self.index + 1)
         if not retval then
             rawset(self, "ended", true)
-        else
-            rawset(self, "index", self.index + 1)
         end
         return retval
     end,

@@ -21,6 +21,7 @@ controller.prototype = {
     tracklist = tracklist.new({}),
     running_system_name = "0",
     parent_system_name = "0",
+    screen_path = ":screen",
     --- "virtual" methods to override.
     init = function(self)  end,
     stop_raw = function(self) end,
@@ -82,6 +83,10 @@ function controller.new(s)
         tb:init()
         setmetatable(tb, controller.mt)
         tb:stop()
+        rawset(tb, "tracklist", tracklist.new(manager.machine.system.name))
+        if tb.tracklist == {} then
+            rawset(tb, "tracklist", tracklist.new(ancestor_system.name))
+        end
         return tb
     elseif type(s) == "table" then
         setmetatable(s, controller.mt)

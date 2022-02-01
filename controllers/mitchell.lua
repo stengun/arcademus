@@ -15,13 +15,13 @@ local mitchell = {}
 --- 
 local injected_opcodes = {
     0x31, 0x00, 0x00, 0x3E,  0x00, 0xCD, 0x00, 0x00,  0xCD, 0x00, 0x00, 0x01,
-    0xFF, 0x16, 0xED, 0xB0,  0x18, 0xF6, 0x00, 0x00,
+    0xFF, 0x17, 0xED, 0xB0,  0x18, 0xF6, 0x00, 0x00,
 }
 
 local games = {}
 -- note: this format can be simplified to omit the first two params, mgakuen is the only reason they were added.
 --- format: memory_space, offset, opll_init, opll_play, sp, stop_track, tracklist
-games.pang      = { "opcodes", 0xF000, 0x7803, 0x7800, 0x0000, 63, "mitchell/pang.dat" }
+games.pang      = { "opcodes", 0xF000, 0x7803, 0x7800, 0x0000, 63, }
 games.spang     = { "opcodes", 0xF000, 0x7803, 0x7800, 0x0000, 64  }
 
 games.mgakuen   = { "program", 0xEFE0, 0x7803, 0x7800, 0xEE40, 41   } -- this does not work properly
@@ -91,7 +91,6 @@ function mitchell:init()
     program_counter_base = game[2]
 
     inject()
-    self.tracklist = tracklist.new(game[7])
 end
 
 return mitchell

@@ -62,12 +62,20 @@ function arcademus.startplugin()
         end
 
         if not controller then
+            if manager.machine.devices[":soundlatch"] ~= nil then
+                controller = require("arcademus/structures/controller").new("latched")
+                player:init(controller)
+                return
+            end
             return
         end
         player:init(controller)
     end
 
     local function tick()
+        if controller then
+            controller:tick()
+        end
         keyboard_events.poll()
     end
 

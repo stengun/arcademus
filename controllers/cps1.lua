@@ -39,7 +39,7 @@ end
 function cps1:init()
     maincpu = manager.machine.devices[":maincpu"]
     memory = maincpu.spaces["program"]
-    qsound = not (manager.machine.devices[":qsound"] == nil)
+    qsound = manager.machine.devices[":qsound"] ~= nil
     inject()
 end
 
