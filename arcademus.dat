@@ -122,5 +122,12 @@ hsf2:
 neogeo:
 @neogeo
 
+taf_l5:
+tafg_lx3:
+@wpc_flip1
+
+mb_10:
+@wpc_95
+
 rthunder:
 @namcos86
