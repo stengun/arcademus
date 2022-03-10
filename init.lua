@@ -83,9 +83,14 @@ function arcademus.startplugin()
         player:draw_frame()
     end
 
+    local function pre_reset()
+        keyboard_events.reset_bindings()
+    end
+    
     emu.register_start(machine_start)
     emu.register_frame(tick)
     emu.register_frame_done(frame_done, "frame")
+    emu.register_prestart(pre_reset)
 end
 
 return arcademus

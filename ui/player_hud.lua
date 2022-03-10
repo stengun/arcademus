@@ -150,7 +150,7 @@ function hud:init(controller)
     keyboard_events.register_key_event_callback(
             "KEYCODE_UP", -- scroll list up / sub 16 to raw alue
             function(event)
-                if event == "pressed" then
+                if event == "pressed" or event == "pressed_repeat" then
                     if not raw_mode then
                         hud.list_hovered = math.max(1, hud.list_hovered - 1)
                         if hud.list_hovered < listmin then
@@ -164,7 +164,7 @@ function hud:init(controller)
     keyboard_events.register_key_event_callback(
             "KEYCODE_DOWN", -- scroll list down / add 16 to raw value
             function(event)
-                if event == "pressed" then
+                if event == "pressed" or event == "pressed_repeat" then
                     if not raw_mode then
                         hud.list_hovered = math.min(hud.controller:track_total(), hud.list_hovered + 1)
                         if hud.list_hovered > listmax then
@@ -178,13 +178,13 @@ function hud:init(controller)
     keyboard_events.register_key_event_callback(
             "KEYCODE_LEFT", -- sub 1 to raw value
             function(event)
-                if event == "pressed" then
+                if event == "pressed"  or event == "pressed_repeat" then
                     raw_value = math.max(0, raw_value - 1) & 0xFF
                 end end)
     keyboard_events.register_key_event_callback(
             "KEYCODE_RIGHT", -- add 1 to raw value
             function(event)
-                if event == "pressed" then
+                if event == "pressed" or event == "pressed_repeat" then
                     raw_value = math.min(0xFF, raw_value + 1) & 0xFF
                 end end)
     keyboard_events.register_key_event_callback(

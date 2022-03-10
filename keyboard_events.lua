@@ -31,13 +31,17 @@ function keyboard_events.poll()
     local input = manager.machine.input
     for cb_name, _ in pairs(event_callbacks) do
         local is_pressed = input:code_pressed(input:code_from_token(cb_name))
-        local was_pressed = last_state[cb_name]
+        local was_pressed = last_state[cb_name][1]
         if was_pressed and not is_pressed then
             fire_callbacks(cb_name, "released")
+            last_state[cb_name] = { is_pressed, emu.time() }
         elseif not was_pressed and is_pressed then
             fire_callbacks(cb_name, "pressed")
+            last_state[cb_name] = { is_pressed, emu.time() }
+        elseif was_pressed and is_pressed and emu.time() - last_state[cb_name][2] >= 0.25 then
+            fire_callbacks(cb_name, "pressed_repeat")
+            last_state[cb_name] = { is_pressed, emu.time() - 0.12 }
         end
-        last_state[cb_name] = is_pressed
     end
 end
 ---
@@ -52,8 +56,12 @@ function keyboard_events.register_key_event_callback(key, cb)
         event_callbacks[key] = {}
     end
     local input = manager.machine.input
-    last_state[key] = input:code_pressed(input:code_from_token(key))
+    last_state[key] = { input:code_pressed(input:code_from_token(key)), emu.time() }
     table.insert(event_callbacks[key], cb)
+end
+
+function keyboard_events.reset_bindings()
+    event_callbacks = {}
 end
 
 return keyboard_events
