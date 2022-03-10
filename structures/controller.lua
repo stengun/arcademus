@@ -21,7 +21,6 @@ controller.prototype = {
     tracklist = tracklist.new({}),
     running_system_name = "0",
     parent_system_name = "0",
-    screen_path = ":screen",
     --- "virtual" methods to override.
     init = function(self)  end,
     stop_raw = function(self) end,
