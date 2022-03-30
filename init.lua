@@ -87,7 +87,14 @@ function arcademus.startplugin()
         keyboard_events.reset_bindings()
     end
     
+    local function machine_stop()
+        if controller then
+            controller:machine_stop()
+        end
+    end
+
     emu.register_start(machine_start)
+    emu.register_stop(machine_stop)
     emu.register_frame(tick)
     emu.register_frame_done(frame_done, "frame")
     emu.register_prestart(pre_reset)

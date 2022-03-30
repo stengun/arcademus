@@ -21,17 +21,22 @@ controller.prototype = {
     tracklist = tracklist.new({}),
     running_system_name = "0",
     parent_system_name = "0",
+    vgmlogger = nil,
     --- "virtual" methods to override.
     init = function(self)  end,
     stop_raw = function(self) end,
     play_raw = function(self, raw_index)  end,
     tick_impl = function(self) end,
+    machine_stop_impl = function(self) end,
     --- normal methods
     stop = function(self)
         if manager.machine.sound.recording then
             manager.machine.sound:stop_recording()
         end
         self:stop_raw()
+        if self.vgmlogger.logging then
+            self.vgmlogger:stop()
+        end
         rawset(self, "playing", false)
     end,
     play = function(self, track)
@@ -51,6 +56,12 @@ controller.prototype = {
         local file_name = string.format("%s/%s_%d.wav", path, manager.machine.system.name, track)
         manager.machine.sound:start_recording(file_name)
     end,
+    start_vgmlog = function(self, track)
+        self:play(track)
+        if self.vgmlogger.initialized then
+            self.vgmlogger:start(track)
+        end
+    end,
     track_info = function(self, trackindex)
         return self.tracklist[trackindex]
     end,
@@ -62,6 +73,11 @@ controller.prototype = {
     end,
     tick = function(self)
         self:tick_impl()
+    end,
+    machine_stop = function(self)
+        self:stop()
+        self.vgmlogger:reset()
+        self:machine_stop_impl()
     end
 }
 
@@ -79,7 +95,9 @@ function controller.new(s)
         end
         tb.running_system_name = manager.machine.system.name
         tb.parent_system_name = ancestor_system.name
+        tb.vgmlogger = require("arcademus/vgmlogger")
         tb:init()
+        tb.vgmlogger:init()
         setmetatable(tb, controller.mt)
         tb:stop()
         rawset(tb, "tracklist", tracklist.new(manager.machine.system.name))

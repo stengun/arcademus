@@ -142,7 +142,7 @@ local function draw_info()
     local text_height = manager.ui.line_height
     local current_track = hud.controller.current_track
     local playing = hud.controller.playing
-    
+    local logging = hud.controller.vgmlogger.logging
     if not raw_mode then
         local trackinfo = hud.controller:track_info(playing and current_track or hud.list_hovered)
         draw_text(x + margin_x,
@@ -157,15 +157,18 @@ local function draw_info()
     end
     if manager.machine.sound.recording then
         draw_text(x + margin_x, y + margin_y + text_height * 3, "Recording", 0xFFFF0000)
+    elseif logging then
+        draw_text(x + margin_x, y + margin_y + text_height * 3, "VGM Dumping", 0xFFFF0000)
     elseif playing then
         draw_text(x + margin_x, y + margin_y + text_height * 3, "Playing", 0xFF00FF00)
     end
     local info_format = "Controls:\
     S - Stop track\
     Enter - Play track\
+    D - Dump VGM file\
     R - Record track\
     Arrows - Move Cursor"
-    draw_text(x + margin_x, y_end - margin_y - text_height * 5, info_format, 0xFF888800)
+    draw_text(x + margin_x, y_end - margin_y - text_height * 6, info_format, 0xFF888800)
 end
 
 -- =================== external interface
@@ -242,6 +245,20 @@ function hud:init(controller)
                         hud.controller:record(raw_value, self.base_wave_directory)
                     else
                         hud.controller:record(hud.list_hovered, self.base_wave_directory)
+                    end
+                end end)
+    keyboard_events.register_key_event_callback(
+            "KEYCODE_D", -- Play and dump VGM file
+            function(event)
+                if event == "pressed" then
+                    if not hud.controller.vgmlogger.initialized then
+                        manager.machine:popmessage("This controller does not implement VGM Logging")
+                        return
+                    end
+                    if raw_mode then
+                        hud.controller:start_vgmlog(raw_value)
+                    else
+                        hud.controller:start_vgmlog(hud.list_hovered)
                     end
                 end end)
 end
