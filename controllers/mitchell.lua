@@ -63,7 +63,7 @@ end
 function mitchell:play_raw(num)
     if(num >= 0x80) then
         io:write_i8(0x05, 0x40)
-        io:write_i8(0x05, 0x80|(num & 0x7F))
+        io:write_i8(0x05, num)
         io:write_i8(0x05, 0x80)
     else
         memory:write_i8(program_counter_base + 0x0002, num & 0x7F)
@@ -86,6 +86,8 @@ function mitchell:init()
     io = cpu.spaces["io"]
 
     inject()
+    self.vgmlogger:add_chip(manager.machine.devices[":ymsnd"], 0, io, 0x03, 0x04)
+    -- self.vgmlogger:add_chip(manager.machine.devices[":oki"], io, 0x05, 0x05) -- This oki is driven by the lua script, logger will not work properly.
 end
 
 return mitchell
