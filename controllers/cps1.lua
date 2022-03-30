@@ -18,6 +18,7 @@ local qsound_injected_opcodes = {
 }
 
 local maincpu
+local audiocpu
 local memory
 local qsound = false
 
@@ -40,7 +41,15 @@ function cps1:init()
     maincpu = manager.machine.devices[":maincpu"]
     memory = maincpu.spaces["program"]
     qsound = manager.machine.devices[":qsound"] ~= nil
+    audiocpu = manager.machine.devices[":audiocpu"]
     inject()
+    if qsound then
+        -- TODO log qsound from vgm
+        -- self.vgmlogger:add_chip(qsound, ???, ???, ???)
+    else
+        self.vgmlogger:add_chip(manager.machine.devices[":oki"], 0, audiocpu.spaces["program"], 0xF002, 0xF002)
+        self.vgmlogger:add_chip(manager.machine.devices[":2151"], 0, audiocpu.spaces["program"], 0xF000, 0xF001)
+    end
 end
 
 function cps1:play_raw(num)
