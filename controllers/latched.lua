@@ -99,6 +99,10 @@ function latched:init()
         soundlatch = manager.machine.devices[game[2] == nil and ":soundlatch" or game[2]]
     end
     audiocpu = manager.machine.devices[":audiocpu"]
+    if self.running_system_name == "pcktgal" then
+        self.vgmlogger:add_chip(manager.machine.devices[":ym1"], 0, audiocpu.spaces["program"], 0x800, 0x801)
+        self.vgmlogger:add_chip(manager.machine.devices[":ym2"], 0, audiocpu.spaces["program"], 0x1000, 0x1001)
+    end
 end
 
 function latched:play_raw(num)
