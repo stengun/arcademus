@@ -105,6 +105,14 @@ function rastan:init()
     maincpu = manager.machine.devices[":maincpu"]
     memory = maincpu.spaces["program"]
     inject()
+    local audiocpu = manager.machine.devices[":audiocpu"]
+    if self.running_system_name == "rbisland" then
+        self.vgmlogger:add_chip(manager.machine.devices[":ymsnd"], 0, audiocpu.spaces["program"], 0x9000, 0x9001)
+    end
+    if self.running_system_name == "jumping" then
+        self.vgmlogger:add_chip(manager.machine.devices[":ym1"], 0, audiocpu.spaces["program"], 0xB000, 0xB001)
+        self.vgmlogger:add_chip(manager.machine.devices[":ym2"], 1, audiocpu.spaces["program"], 0xB400, 0xB401)
+    end
 end
 
 return rastan
