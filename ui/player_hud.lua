@@ -3,7 +3,6 @@
 --- to be fully functional using the :init(controller) method.
 --- Register method :draw_frame() inside your drawing tick function to draw it.
 ---
--- there are a lot of magic numbers in this file and that's bad.
 
 require("arcademus/keyboard_events")
 
@@ -14,12 +13,11 @@ local hud = {
 }
 
 local screen
--- TODO remove those magic numbers and calculate list range in other ways.
-local listmin = 1
-local listmax = 11
 -- =====
 local raw_value = 0
 local raw_mode = false
+local listmin = 1
+local listmax = 1
 
 -- text draw helpers
 local function draw_text_hovered(x, y, text, color)
@@ -41,16 +39,13 @@ local function draw_titled_box(x, y, x_end, y_end, title)
     draw_text(x + 0.01, y + 0.01, title)
 end
 
-local function hex_to_string(n)
-    return string.format("0x%02X", n)
-end
 -- ================
 
 local function draw_raw_selector()
     local x, y, x_end, y_end = 0.51, 0.05, 0.95, 0.46
     local margin_x, margin_y = 0.01, 0.01
     draw_titled_box(x, y, x_end, y_end, "Raw value selector")
-    
+
     local entry_string = "%s hex: 0x%02X - dec: %d"
     local symbol = "-"
     local text_color
@@ -71,17 +66,24 @@ local function draw_tracklist()
     local x, y, x_end, y_end = 0.51, 0.05, 0.95, 0.46
     local margin_x, margin_y = 0.01, 0.01
     draw_titled_box(x, y, x_end, y_end, "Track List")
-    
+
     local current_track = hud.controller.current_track
     local total = hud.controller:track_total()
     local playing = hud.controller.playing
     local recording = manager.machine.sound.recording
     local line_height = manager.ui.line_height
     local char_width = manager.ui:get_string_width("▲", 1.0)
-    
     local navigation_text = string.format("%2.2d/%d", hud.list_hovered, total)
     draw_text(x_end - margin_x - manager.ui:get_string_width(navigation_text, 1.0), y + margin_y, navigation_text)
-    
+
+    local list_entries = math.floor((y_end - y) / line_height) - 2
+    if hud.list_hovered > listmax then
+	   listmax = hud.list_hovered
+	   listmin = listmax - list_entries
+    elseif hud.list_hovered <= listmin then
+       listmin = hud.list_hovered
+       listmax = listmin + list_entries
+    end
     -- scrollbar
     if listmin > 1 then
         draw_text(x_end - margin_x - char_width, y + margin_y + line_height, "▲")
@@ -105,7 +107,6 @@ local function draw_tracklist()
     -- ==============
     for idx, track in pairs(hud.controller.tracklist) do
         if idx >= listmin and idx <= listmax then
-            local window_percentage = (idx - listmin) / (listmax - listmin)
             local cury = y + margin_y + ((idx - listmin + 1) * line_height)
             screen:draw_line(x + margin_x, cury, x_end - margin_x * 2 - char_width, cury)
 
@@ -121,7 +122,6 @@ local function draw_tracklist()
                     text_color = 0xFF00FF00
                 end
             end
-            
             entry_string = string.format(entry_string, idx, symbol, track.name)
             if idx == hud.list_hovered then
                 draw_text_hovered(x + margin_x, cury, entry_string, text_color)
@@ -142,11 +142,11 @@ local function draw_info()
     local text_height = manager.ui.line_height
     local current_track = hud.controller.current_track
     local playing = hud.controller.playing
-    
+
     if not raw_mode then
         local trackinfo = hud.controller:track_info(playing and current_track or hud.list_hovered)
         draw_text(x + margin_x,
-                    y + margin_y + text_height, 
+                    y + margin_y + text_height,
                     string.format(
                         "Title: %s\nhex: 0x%02X - dec: %d",
                         trackinfo.name,
@@ -171,7 +171,6 @@ end
 -- =================== external interface
 function hud:init(controller)
     self.controller = controller
-
     raw_mode = not self.controller.tracklist or #self.controller.tracklist == 0
     screen = manager.machine.render.ui_container
     -- Register callbacks for UI input
@@ -181,10 +180,6 @@ function hud:init(controller)
                 if event == "pressed" or event == "pressed_repeat" then
                     if not raw_mode then
                         hud.list_hovered = math.max(1, hud.list_hovered - 1)
-                        if hud.list_hovered < listmin then
-                            listmin = listmin - 1
-                            listmax = listmax - 1
-                        end
                     else
                         raw_value = math.max(0, raw_value + 16) & 0xFF
                     end
@@ -195,10 +190,6 @@ function hud:init(controller)
                 if event == "pressed" or event == "pressed_repeat" then
                     if not raw_mode then
                         hud.list_hovered = math.min(hud.controller:track_total(), hud.list_hovered + 1)
-                        if hud.list_hovered > listmax then
-                            listmin = listmin + 1
-                            listmax = listmax + 1
-                        end
                     else
                         raw_value = math.min(0xFF, raw_value - 16) & 0xFF
                     end
