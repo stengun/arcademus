@@ -22,6 +22,14 @@ end
 function wpc_flip1:init()
     cpu = manager.machine.devices[":maincpu"]
     memory = cpu.spaces["program"]
+    local mem = manager.machine.memory.regions[":code"]
+    -- TODO use commond hang routines
+    --- cpu entrypoint is fetched from $FFFE/$FFFF, the addres for the RESET interrupt routine
+    local entrypoint = 0x78000 | (mem:read_u8(0x7FFFE) << 8 | mem:read_u8(0x7FFFF))
+    --- Put a JMP $entry_point instruction in $entry_point, effectively hanging the cpu.
+    mem:write_u8(entrypoint, 0x7E)
+    mem:write_u8(entrypoint + 0x01, (entrypoint >> 8) & 0xFF)
+    mem:write_u8(entrypoint + 0x02, entrypoint & 0xFF)
 end
 
 
@@ -30,7 +38,7 @@ function wpc_flip1:play_raw(num)
 end
 
 function wpc_flip1:stop_raw()
-    ---send_command_to_wdc(0xFF)
+    send_command_to_wdc(0x00)
 end
 
 return wpc_flip1

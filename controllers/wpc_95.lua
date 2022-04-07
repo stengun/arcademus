@@ -6,8 +6,6 @@ local cmdqueue = {}
 local memory
 local cpu
 local initialized = false
-local step1 = false
-local step2 = false
 
 local function init_sound()
     memory:write_i8(0x3FDC, 0x00)
@@ -22,7 +20,6 @@ local function init_sound()
 end
 
 local function send_command_to_wdc(cmd)
-    
 --     cmdqueue:push_command(0x03)
 --     cmdqueue:push_command(0xE7)
 --     cmdqueue:push_command(0x03)
@@ -65,12 +62,11 @@ function wpc_95:tick_impl()
 --        return
 --    end
 --    print("step2 passed")
-    
     local cmd = cmdqueue:get_next()
     if cmd == nil then
         return
     end
-    memory:write_i8(0x3FDC, cmd)
+    memory:write_u8(0x3FDC, cmd)
 end
 
 function wpc_95:init()
@@ -83,7 +79,7 @@ end
 
 function wpc_95:play_raw(num)
     cmdqueue:reset_queue()
-    cmdqueue:push_command(0x01)
+    cmdqueue:push_command(0x00)
     cmdqueue:push_command(num & 0xFF)
 end
 
@@ -94,4 +90,3 @@ function wpc_95:stop_raw()
 end
 
 return wpc_95
- 
