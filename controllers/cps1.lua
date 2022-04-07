@@ -12,7 +12,7 @@ local qsound_injected_opcodes = {
     0xB039, 0x00F1, 0x9FFF, -- cmp.b #$f19fff.l, D0       ; wait until audiocpu signals ready in comm. port with 77
     0x66F8,                 -- bne #$-1
     0x12BC, 0x0088,         -- move.b #$88, (A1)        ; init sequence
-    0x137C, 0x00FF, 0x0002, -- move.b #$FF, ($2, A1)    ; 
+    0x137C, 0x00FF, 0x0002, -- move.b #$FF, ($2, A1)    ;
     0x137C, 0x00FF, 0x0004, -- move.b #$FF, ($4, A1)    ; set FF for command sent
     0x60FE,                 -- bra #$0
 }

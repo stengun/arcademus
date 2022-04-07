@@ -30,7 +30,7 @@ end
 
 function namcos86:stop_raw()
     if self.current_track >= 0x100 then
-        memory:write_i8(0x1285 + (self.current_track & 0xFF), 0) 
+        memory:write_i8(0x1285 + (self.current_track & 0xFF), 0)
         return
     end
     self:play_raw(0x00)

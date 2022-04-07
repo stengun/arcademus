@@ -72,7 +72,7 @@ controller.mt = {
 
 function controller.new(s)
     if type(s) == "string" then
-        tb = require("arcademus/controllers/" .. s)
+        local tb = require("arcademus/controllers/" .. s)
         local ancestor_system = manager.machine.system
         while ancestor_system.parent ~= "0" do
             ancestor_system = emu.driver_find(ancestor_system.parent)

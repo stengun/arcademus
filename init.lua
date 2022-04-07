@@ -44,7 +44,7 @@ function arcademus.startplugin()
         if file then
             local current_is_match = false;
             repeat
-                line = file:read("*l");
+                local line = file:read("*l");
                 if line then
                     -- remove comments
                     line = line:gsub( '[ \t\r\n]*;.+$', '' );
@@ -86,7 +86,7 @@ function arcademus.startplugin()
     local function pre_reset()
         keyboard_events.reset_bindings()
     end
-    
+
     emu.register_start(machine_start)
     emu.register_frame(tick)
     emu.register_frame_done(frame_done, "frame")
