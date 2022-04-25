@@ -209,6 +209,7 @@ function neogeo:init()
     if game ~= nil then
         cmdqueue.prefix = game
     end
+    self.vgmlogger:add_chip(manager.machine.devices["ymsnd"], 0, manager.machine.devices[":audiocpu"].spaces["io"], 0x04, 0x07)
     manager.machine:popmessage("Machine is Initializing...")
 end
 

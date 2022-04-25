@@ -37,8 +37,13 @@ local function ymfm_common(offset, data, device, vgmcommand)
         tracked_chips[device].register = data
     else
         insert_delay()
-        local command = tracked_chips[device].port == 0 and vgmcommand or ((vgmcommand & 0x0F) | 0xA0)
+        local command = vgmcommand
+        if device.shortname == 'ym2610' then
+            command = tracked_chips[device].port == 0 and vgmcommand or (vgmcommand | 0x01)
+        else
+            command = tracked_chips[device].port == 0 and vgmcommand or ((vgmcommand & 0x0F) | 0xA0)
         raw_dump = raw_dump .. string.char(command, tracked_chips[device].register, data)
+        end
     end
 end
 
@@ -50,6 +55,10 @@ end
     device - device that owns this callback
 ]]
 local chip_dumpers = {
+    ym2610 = function(offset, data, device)
+        -- print(string.format("0x58 0x%02X 0x%02X", offset, data))
+        ymfm_common(offset, data, device, 0x58)
+    end,
     ym2203 = function(offset, data, device)
         ymfm_common(offset, data, device, 0x55)
     end,
@@ -92,6 +101,22 @@ header[0x01] = string.char(0x56, 0x67, 0x6D, 0x20) -- 'Vgm ' magic header
 header[0x09] = string.char(0x71, 0x01, 0x00, 0x00) -- VGM file version
 header[0x35] = string.char(0xCC) -- data offset
 
+local function _ym2610_data_block(port, romsize, rom, start_offset, end_offset)
+    local retval = string.char(0x67, 0x66, 0x82)
+    local sample_size = (end_offset - start_offset) + 1
+    local datablock_size = (sample_size + 8)
+    retval = retval .. get_as_32le(datablock_size) .. get_as_32le(romsize) .. get_as_32le(start_offset)
+    for i = start_offset,  end_offset, 1 do
+        retval = retval .. string.char(rom:read_u8(i))
+    end
+    retval = retval .. string.char(0x67, 0x66, 0x83) .. get_as_32le(0x08) .. get_as_32le(romsize) .. get_as_32le(start_offset) -- delta pcm
+    return retval
+end
+
+local function ym2610_data_block(self)
+    return _ym2610_data_block(self.port, 0x00100000, self.rom, 0x00000000, 0x003708)
+end
+
 local function okim_data_block(port, romsize, rom, start_ptr, end_ptr)
     local retval = string.char(0x67, 0x66, 0x8B)
     local sample_size = (end_ptr - start_ptr) + 1
@@ -111,8 +136,8 @@ local function get_data_blocks(self)
         for _, val in pairs(self.samples.used) do
             retval = retval .. okim_data_block(self.port, self.samples.highest, self.rom, val.start_ptr, val.end_ptr)
         end
-        return retval
     end
+    return retval
 end
 
 local function write_file(filename)
@@ -174,6 +199,13 @@ local vgmlogger = {
             end)
         tap:remove()
         tracked_chips[internal_name] = { port = port, tap = tap , reset = function(self) end }
+        if device.shortname == "ym2610" then
+            local clock = emu.item(device.items["0/m_unscaled_clock"]):read()
+            header[0x4D] = get_as_32le(clock & 0x3FFFFFFF | (port & 0x1) << 30 | 0x800000000) -- (bit 31 for 2610/B)
+            tracked_chips[internal_name].rom = device.spaces["adpcm_b"]
+            tracked_chips[internal_name].get_data_blocks = ym2610_data_block
+            tracked_chips[internal_name].reset = function(self) self.register = 0 end
+        end
         if device.shortname == "ym2203" then
             local clock = emu.item(device.items["0/m_unscaled_clock"]):read()
             header[0x45] = get_as_32le(clock & 0x3FFFFFFF | (port & 0x1) << 30)
